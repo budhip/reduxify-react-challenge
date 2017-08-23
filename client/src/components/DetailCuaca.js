@@ -17,8 +17,6 @@ class DetailCuaca extends Component {
 
   componentWillMount () {
     this.setState({
-      tanggal: new Date(this.state.tanggal).toDateString(),
-      suhu: Math.round(this.state.suhu - 273),
       icon: 'http://openweathermap.org/img/w/' +this.state.icon+ '.png'
     })
   }

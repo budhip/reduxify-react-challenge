@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+
 import ForecastItem from './ForecastItem';
 
 class MainForecast extends Component{
   render = () => {
     return(
       <div>
-        <h1>Perkiraan Minggu Ini</h1>
+        <h1>Perkiraan Selanjutnya</h1>
         <div className="row">
-          {this.props.weatherList.map((weather, index) => (
+          {this.props.forecastWeathers.map((weather, index) => (
             (weather.dt_txt.includes("06:00:00")) ? <ForecastItem
             cuaca = {
               weather.weather[0].description
@@ -16,7 +18,7 @@ class MainForecast extends Component{
               weather.weather[0].icon
             }
             tanggal = {
-              weather.dt_txt
+              new Date(weather.dt_txt).toDateString()
             }
             tanggalDT = {
               weather.dt
@@ -25,7 +27,7 @@ class MainForecast extends Component{
               weather.main.humidity
             }
             suhu = {
-              weather.main.temp
+              Math.round(weather.main.temp - 273)
             }
             key = {
               index
@@ -38,4 +40,10 @@ class MainForecast extends Component{
   }
 }
 
-export default MainForecast;
+const mapStateToProps = (state) => {
+  return {
+    forecastWeathers: state.weather.forecastWeathers
+  }
+}
+
+export default connect(mapStateToProps, null) (MainForecast);
