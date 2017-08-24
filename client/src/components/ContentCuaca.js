@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import { connect } from 'react-redux';
 
 import MainForecast from './MainForecast';
 import Header from './Header';
-import { getCurrentWeather, getForecasts, findCityCurrent, findCityForecasts } from '../actions'
+import { getCurrentWeather, getForecasts, findCityCurrent, findCityForecasts } from '../actions';
 
 class ContentCuaca extends Component {
   constructor(props) {
@@ -12,41 +11,23 @@ class ContentCuaca extends Component {
     this.state = {
       cityInput: ''
     }
-
-    this.gantiKota = this.gantiKota.bind(this)
-    this.cariCuaca = this.cariCuaca.bind(this)
+    this.gantiKota = this.gantiKota.bind(this);
+    this.cariCuaca = this.cariCuaca.bind(this);
   }
 
   componentDidMount () {
-    axios.get('http://api.openweathermap.org/data/2.5/weather?q=Jakarta&APPID=80acb29daded6e808231e31fb1c6666b')
-    .then(response => {
-      console.log(response.data);
-      this.props.getWeather(response.data)
-    })
-    .catch(err => console.log(err))
-    axios.get('http://api.openweathermap.org/data/2.5/forecast?q=Jakarta&APPID=80acb29daded6e808231e31fb1c6666b')
-    .then(response => {
-      this.props.getForecasts(response.data.list)
-    })
-    .catch(err => console.log(err))
+    this.props.getWeather();
+    this.props.getForecasts();
   }
 
   cariCuaca (e) {
-    e.preventDefault()
-    let kotaPilihan = this.state.cityInput
-    axios.get('http://api.openweathermap.org/data/2.5/weather?q=' + kotaPilihan + '&APPID=80acb29daded6e808231e31fb1c6666b')
-    .then(response => {
-      this.props.findCurrent(response.data)
+    e.preventDefault();
+    let kotaPilihan = this.state.cityInput;
+    this.props.findCurrent(kotaPilihan);
+    this.props.findForecasts(kotaPilihan);
+    this.setState({
+      cityInput: ''
     })
-    .catch(err => console.log(err))
-    axios.get('http://api.openweathermap.org/data/2.5/forecast?q=' + kotaPilihan + '&APPID=80acb29daded6e808231e31fb1c6666b')
-    .then(response => {
-      this.props.findForecasts(response.data.list)
-      this.setState({
-        cityInput: ''
-      })
-    })
-    .catch(err => console.log(err))
   }
 
   gantiKota (data) {
@@ -56,7 +37,7 @@ class ContentCuaca extends Component {
   }
 
   render = () => {
-    const { currentWeather } = this.props
+    const { currentWeather } = this.props;
     let displayIcon = 'http://openweathermap.org/img/w/' +currentWeather.icon+ '.png';
     return(
       <div>
@@ -94,10 +75,10 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getWeather: (weather) => dispatch(getCurrentWeather(weather)),
-    getForecasts: (weathers) => dispatch(getForecasts(weathers)),
-    findCurrent: (weather) => dispatch(findCityCurrent(weather)),
-    findForecasts: (weathers) => dispatch(findCityForecasts(weathers))
+    getWeather: () => dispatch(getCurrentWeather()),
+    getForecasts: () => dispatch(getForecasts()),
+    findCurrent: (kotaPilihan) => dispatch(findCityCurrent(kotaPilihan)),
+    findForecasts: (kotaPilihan) => dispatch(findCityForecasts(kotaPilihan))
   }
 }
 
